@@ -3,13 +3,12 @@ const github = require('@actions/github');
 const { exec } = require('@actions/exec');
 
 (async () => {
+  console.log(JSON.stringify(github, null, 2));
   if (!github || !github.context || !github.context.payload || !github.context.payload.before) {
-    console.log('No before');
     core.setOutput('text', '');
     core.setOutput('json', []);
     return;
   }
-  console.log('Before');
 
   try {
     const output = [];
