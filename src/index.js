@@ -4,10 +4,12 @@ const { exec } = require('@actions/exec');
 
 (async () => {
   if (!github || !github.context || !github.context.payload || !github.context.payload.before) {
+    console.log('No before');
     core.setOutput('text', '');
     core.setOutput('json', []);
     return;
   }
+  console.log('Before');
 
   try {
     const output = [];
