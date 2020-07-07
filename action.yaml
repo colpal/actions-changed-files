@@ -6,4 +6,4 @@ outputs:
     description: List of files that changed since the last commit
 runs:
   using: node12
-  main: /dist/main.js
+  main: dist/main.js
