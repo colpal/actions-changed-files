@@ -3,8 +3,8 @@ const github = require('@actions/github');
 const { exec } = require('@actions/exec');
 
 (async () => {
-  console.log(JSON.stringify(github, null, 2));
-  if (!github || !github.context || !github.context.payload || !github.context.payload.before) {
+  if (github.ref.startsWith('refs/tags/')
+      && github.context.payload.before === '0000000000000000000000000000000000000000') {
     core.setOutput('text', '');
     core.setOutput('json', []);
     return;
