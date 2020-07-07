@@ -3,6 +3,11 @@ const github = require('@actions/github');
 const { exec } = require('@actions/exec');
 
 (async () => {
+  if (!github || !github.context || !github.context.payload || !github.context.payload.before) {
+    core.setOutput('text', '');
+    core.setOutput('json', []);
+  }
+
   try {
     const output = [];
     await exec(
