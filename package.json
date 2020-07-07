@@ -4,7 +4,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run build; git add dist/main.js"
+      "pre-commit": "npm run build && git add dist/main.js"
     }
   },
   "devDependencies": {
