@@ -6,6 +6,7 @@ const { exec } = require('@actions/exec');
   if (!github || !github.context || !github.context.payload || !github.context.payload.before) {
     core.setOutput('text', '');
     core.setOutput('json', []);
+    return;
   }
 
   try {
