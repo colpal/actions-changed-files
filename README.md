@@ -17,7 +17,7 @@ steps:
 
   # Be sure to set an ID on the step that invokes the action. We need this later to access outputs!
   - id: changed
-    uses: colpal/actions-changed-files@v1.0.3
+    uses: colpal/actions-changed-files@v1.0.0
 
   - run: echo '${{ steps.changed.outputs.text }}'
     # Access the changed files as a plain text list. For example:
