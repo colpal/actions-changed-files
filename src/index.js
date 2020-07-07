@@ -5,6 +5,7 @@ const { exec } = require('@actions/exec');
 (async () => {
   try {
     const output = [];
+    console.log(JSON.stringify(github, null, 2));
     await exec(
       'git',
       ['diff', '--name-only', github.event.before, 'HEAD'],
