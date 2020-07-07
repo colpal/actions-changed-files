@@ -3,14 +3,14 @@ const github = require('@actions/github');
 const { exec } = require('@actions/exec');
 
 (async () => {
-  if (github.ref.startsWith('refs/tags/')
-      && github.context.payload.before === '0000000000000000000000000000000000000000') {
-    core.setOutput('text', '');
-    core.setOutput('json', []);
-    return;
-  }
-
   try {
+    if (github.context.ref.startsWith('refs/tags/')
+        && github.context.payload.before === '0000000000000000000000000000000000000000') {
+      core.setOutput('text', '');
+      core.setOutput('json', []);
+      return;
+    }
+
     const output = [];
     await exec(
       'git',
