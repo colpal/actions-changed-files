@@ -11,6 +11,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - run: echo "Previous '${{ github.event.before }}'"
+      - id: changed
+        uses: ./
 
-      - run: echo "Current '${{ github.sha }}'"
+      - run: echo ${{ steps.changed.outputs.files }}
