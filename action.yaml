@@ -1,0 +1,9 @@
+---
+name: Changed Files
+description: Determine which files have changed since the last workflow run
+outputs:
+  files:
+    description: List of files that changed since the last commit
+runs:
+  using: node12
+  main: /dist/main.js
