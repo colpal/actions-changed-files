@@ -14,4 +14,4 @@ jobs:
       - id: changed
         uses: ./
 
-      - run: echo ${{ steps.changed.outputs.files }}
+      - run: echo '${{ steps.changed.outputs.files }}'
