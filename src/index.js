@@ -12,13 +12,15 @@ const { exec } = require('@actions/exec');
         silent: true,
         listeners: {
           stdout(data) {
-            output.push(data.toString().trim());
+            output.push(data.toString());
           },
         },
       },
     );
-    core.setOutput('json', output);
-    core.setOutput('text', output.join('\n'));
+    const text = output.join('').trim();
+    core.setOutput('text', text);
+    const json = text.split('\n');
+    core.setOutput('json', json);
   } catch (error) {
     core.setFailed(error.message);
   }
