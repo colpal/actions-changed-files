@@ -12,12 +12,13 @@ const { exec } = require('@actions/exec');
         silent: true,
         listeners: {
           stdout(data) {
-            output.push(data.toString());
+            output.push(data.toString().trim());
           },
         },
       },
     );
-    core.setOutput('files', output.join('').trim());
+    core.setOutput('json', output);
+    core.setOutput('text', output.join('\n'));
   } catch (error) {
     core.setFailed(error.message);
   }
