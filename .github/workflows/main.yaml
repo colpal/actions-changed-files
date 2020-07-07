@@ -11,7 +11,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - id: changed
+      - name: Run colpal/actions-changed-files
+        id: changed
         uses: ./
 
       - name: Output as Text
