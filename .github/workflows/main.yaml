@@ -11,7 +11,7 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.1
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
@@ -19,8 +19,17 @@ jobs:
         id: changed
         uses: ./
 
-      - name: Output as Text
-        run: echo '${{ steps.changed.outputs.text }}'
+      - name: Output all as text
+        run: echo '${{ steps.changed.outputs.all }}'
+
+      - name: Output modified as text
+        run: echo '${{ steps.changed.outputs.modified }}'
+
+      - name: Output deleted as text
+        run: echo '${{ steps.changed.outputs.deleted }}'
+
+      - name: Output added as text
+        run: echo '${{ steps.changed.outputs.added }}'
 
       - name: Output as JSON
         run: echo '${{ steps.changed.outputs.json }}'
