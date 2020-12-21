@@ -2,28 +2,56 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const { exec } = require('@actions/exec');
 
+function second([, b]) {
+  return b;
+}
+
+function setTextOutputs(o) {
+  Object.keys(o).forEach((k) => {
+    core.setOutput(k, o[k].join('\n'));
+  });
+}
+
 (async () => {
   try {
     if (github.context.ref.startsWith('refs/tags/')
         && github.context.payload.before === '0000000000000000000000000000000000000000') {
-      core.setOutput('text', '');
-      core.setOutput('json', []);
+      const json = {
+        all: [],
+        added: [],
+        deleted: [],
+        modified: [],
+      };
+      core.setOutput('json', json);
+      setTextOutputs(json);
       return;
     }
 
-    const output = [];
-    await exec('git', ['diff', '--name-only', github.context.payload.before, 'HEAD'], {
+    const buffer = [];
+    await exec('git', ['diff', '--name-status', github.context.payload.before, 'HEAD'], {
       silent: true,
       listeners: {
         stdout(data) {
-          output.push(data.toString());
+          buffer.push(data.toString());
         },
       },
     });
-    const text = output.join('').trim();
-    core.setOutput('text', text);
-    const json = text.split('\n');
+
+    const lines = buffer
+      .join('')
+      .trim()
+      .split('\n')
+      .map((x) => x.split('\t'));
+
+    const json = {
+      added: lines.filter(([x]) => x.startsWith('A')).map(second),
+      deleted: lines.filter(([x]) => x.startsWith('D')).map(second),
+      modified: lines.filter(([x]) => x.startsWith('M')).map(second),
+      all: lines.map(second),
+    };
+
     core.setOutput('json', json);
+    setTextOutputs(json);
   } catch (error) {
     core.setFailed(error.message);
   }
