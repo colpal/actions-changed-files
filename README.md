@@ -13,8 +13,6 @@ steps:
       # Be sure to set the fetch-depth to 0 to allow arbitrary analysis of previous commits
       fetch-depth: 0
 
-# - ...
-
   # Be sure to set an ID on the step that invokes the action. We need this later to access outputs!
   - id: changed
     uses: colpal/actions-changed-files@v2
