@@ -15,6 +15,13 @@ function setTextOutputs(o) {
 function getSHAs() {
   const compareURL = github.context.payload.compare;
 
+  if (!compareURL) {
+    return [
+      github.context.payload.pull_request.base.sha,
+      github.context.payload.pull_request.merge_commit_sha,
+    ]
+  }
+
   const multiRegex = /([^/]+)\.\.\.([^/]+)$/;
   const multiMatches = compareURL.match(multiRegex);
   if (multiMatches) {
