@@ -17,9 +17,8 @@ function getSHAs() {
   const compareURL = github.context.payload.compare;
   const matches = compareURL.match(regex);
   if (!matches) {
-    const m = `Could not determine commit SHAs from compare URL: ${compareURL}`;
-    core.setFailed(m);
-    throw new Error(m);
+    core.setFailed(`Could not determine commit SHAs from compare URL: ${compareURL}`);
+    process.exit();
   }
   const [, before, after] = matches;
   return [before, after];
