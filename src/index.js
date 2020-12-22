@@ -36,6 +36,8 @@ function getSHAs() {
   try {
     const [before, after] = getSHAs();
 
+    core.debug(`SHAs: ${before}, ${after}`);
+
     const buffer = [];
     await exec('git', ['diff', '--name-status', before, after], {
       silent: true,
@@ -51,6 +53,8 @@ function getSHAs() {
       .trim()
       .split('\n')
       .map((x) => x.split('\t'));
+
+    core.debug(`Lines: ${lines}`);
 
     const json = {
       added: lines.filter(([x]) => x.startsWith('A')).map(second),
