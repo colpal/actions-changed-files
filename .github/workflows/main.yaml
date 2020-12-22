@@ -1,7 +1,10 @@
 ---
 name: Main
 
-'on': push
+'on':
+  push:
+  pull_Request:
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
   main:
