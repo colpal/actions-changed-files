@@ -13,6 +13,7 @@ function setTextOutputs(o) {
 }
 
 function getSHAs() {
+  core.debug(`Event Name: ${github.context.eventName}`);
   switch (github.context.eventName) {
     case 'pull_request':
       return [
