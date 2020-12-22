@@ -13,15 +13,24 @@ function setTextOutputs(o) {
 }
 
 function getSHAs() {
-  const regex = /([^/]+)\.\.\.([^/]+)$/;
   const compareURL = github.context.payload.compare;
-  const matches = compareURL.match(regex);
-  if (!matches) {
-    core.setFailed(`Could not determine commit SHAs from compare URL: ${compareURL}`);
-    process.exit();
+
+  const multiRegex = /([^/]+)\.\.\.([^/]+)$/;
+  const multiMatches = compareURL.match(multiRegex);
+  if (multiMatches) {
+    const [, before, after] = multiMatches;
+    return [before, after];
   }
-  const [, before, after] = matches;
-  return [before, after];
+
+  const singleRegex = /([^/]+$)/;
+  const singleMatch = compareURL.match(singleRegex);
+  if (singleMatch) {
+    const [, after] = singleMatch;
+    return [`${after}^`, after];
+  }
+
+  core.setFailed(`Could not determine commit SHAs from compare URL: ${compareURL}`);
+  return process.exit();
 }
 
 (async () => {
