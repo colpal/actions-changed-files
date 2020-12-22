@@ -12,23 +12,32 @@ function setTextOutputs(o) {
   });
 }
 
+function getSHAs() {
+  switch (github.context.eventName) {
+    case 'pull_request':
+      return [
+        github.context.payload.pull_request.base.sha,
+        github.context.payload.pull_request.head.sha,
+      ];
+    case 'push':
+      return [
+        github.context.payload.before,
+        github.context.payload.after,
+      ];
+    default: {
+      const m = `Unsupported event type: ${github.context.eventName}`;
+      core.setFailed(m);
+      throw new Error(m);
+    }
+  }
+}
+
 (async () => {
   try {
-    if (github.context.ref.startsWith('refs/tags/')
-        && github.context.payload.before === '0000000000000000000000000000000000000000') {
-      const json = {
-        all: [],
-        added: [],
-        deleted: [],
-        modified: [],
-      };
-      core.setOutput('json', json);
-      setTextOutputs(json);
-      return;
-    }
+    const [before, after] = getSHAs();
 
     const buffer = [];
-    await exec('git', ['diff', '--name-status', github.context.payload.before, 'HEAD'], {
+    await exec('git', ['diff', '--name-status', before, after], {
       silent: true,
       listeners: {
         stdout(data) {
