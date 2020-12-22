@@ -1,11 +1,7 @@
 ---
 name: Main
 
-'on':
-  push:
-    paths:
-      - .github/workflows/main.yaml
-      - dist/main.js
+'on': push
 
 jobs:
   main:
