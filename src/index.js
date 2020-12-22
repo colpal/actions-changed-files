@@ -37,6 +37,7 @@ function getSHAs() {
 
 (async () => {
   try {
+    core.debug(JSON.stringify(github, null, 2));
     const [before, after] = getSHAs();
 
     core.debug(`SHAs: ${before}, ${after}`);
