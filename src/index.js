@@ -47,13 +47,10 @@ function getSHAs() {
         },
       },
     });
+    const output = buffer.join('').trim();
+    core.debug(`Raw output:\n${output}`);
 
-    const lines = buffer
-      .join('')
-      .trim()
-      .split('\n')
-      .map((x) => x.split('\t'));
-
+    const lines = output.split('\n').map((x) => x.split('\t'));
     const json = {
       added: lines.filter(([x]) => x.startsWith('A')).map(second),
       deleted: lines.filter(([x]) => x.startsWith('D')).map(second),
