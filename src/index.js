@@ -22,7 +22,9 @@ function getSHAs() {
       ];
     case 'push':
       return [
-        github.context.payload.before,
+        (github.context.payload.before === '0000000000000000000000000000000000000000'
+          ? 'HEAD^'
+          : github.context.payload.before),
         github.context.payload.after,
       ];
     default: {
