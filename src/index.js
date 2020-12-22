@@ -12,23 +12,34 @@ function setTextOutputs(o) {
   });
 }
 
+function getSHAs() {
+  const compareURL = github.context.payload.compare;
+
+  const multiRegex = /([^/]+)\.\.\.([^/]+)$/;
+  const multiMatches = compareURL.match(multiRegex);
+  if (multiMatches) {
+    const [, before, after] = multiMatches;
+    return [before, after];
+  }
+
+  const singleRegex = /([^/]+$)/;
+  const singleMatch = compareURL.match(singleRegex);
+  if (singleMatch) {
+    const [, after] = singleMatch;
+    return [`${after}^`, after];
+  }
+
+  core.setFailed(`Could not determine commit SHAs from compare URL: ${compareURL}`);
+  return process.exit();
+}
+
 (async () => {
   try {
-    if (github.context.ref.startsWith('refs/tags/')
-        && github.context.payload.before === '0000000000000000000000000000000000000000') {
-      const json = {
-        all: [],
-        added: [],
-        deleted: [],
-        modified: [],
-      };
-      core.setOutput('json', json);
-      setTextOutputs(json);
-      return;
-    }
+    core.debug(JSON.stringify(github, null, 2));
+    const [before, after] = getSHAs();
 
     const buffer = [];
-    await exec('git', ['diff', '--name-status', github.context.payload.before, 'HEAD'], {
+    await exec('git', ['diff', '--name-status', before, after], {
       silent: true,
       listeners: {
         stdout(data) {
