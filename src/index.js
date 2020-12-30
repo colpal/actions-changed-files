@@ -43,7 +43,8 @@ function getSHAs() {
 (async () => {
   try {
     const [before, after] = getSHAs();
-    core.debug(`Before:After: ${before}:${after}`);
+    core.debug(`Before SHA: ${before}`);
+    core.debug(`After SHA: ${after}`);
 
     const buffer = [];
     await exec('git', ['diff', '--name-status', before, after], {
