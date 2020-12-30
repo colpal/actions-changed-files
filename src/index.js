@@ -18,7 +18,7 @@ function getSHAs() {
   if (!compareURL) {
     return [
       github.context.payload.pull_request.base.sha,
-      github.context.payload.pull_request.merge_commit_sha,
+      github.context.payload.pull_request.head.sha,
     ];
   }
 
