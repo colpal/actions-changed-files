@@ -40,11 +40,30 @@ function getSHAs() {
   return process.exit();
 }
 
+async function validateSHA(sha) {
+  try {
+    await exec('git', ['cat-file', '-e', sha], { silent: true });
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 (async () => {
   try {
     const [before, after] = getSHAs();
     core.debug(`Before SHA: ${before}`);
     core.debug(`After SHA: ${after}`);
+
+    if (!await validateSHA(before)) {
+      core.setFailed(`The before SHA (${before}) was not found in the git log`);
+      process.exit();
+    }
+
+    if (!await validateSHA(after)) {
+      core.setFailed(`The after SHA (${after}) was not found in the git log`);
+      process.exit();
+    }
 
     const buffer = [];
     await exec('git', ['diff', '--name-status', before, after], {
