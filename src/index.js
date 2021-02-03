@@ -52,6 +52,7 @@ async function validateSHA(sha) {
 (async () => {
   try {
     const [before, after] = getSHAs();
+    core.debug(JSON.stringify(github.context.payload, null, 2));
     core.debug(`Before SHA: ${before}`);
     core.debug(`After SHA: ${after}`);
 
