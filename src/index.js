@@ -77,9 +77,7 @@ async function getChangesViaGit() {
     process.exit();
   }
 
-  const diff = gitDiff(before, after);
-
-  const lines = diff.split('\n').map((x) => x.split('\t'));
+  const lines = gitDiff(before, after).split('\n').map((x) => x.split('\t'));
   return {
     added: lines.filter(([x]) => x.startsWith('A')).map(second),
     deleted: lines.filter(([x]) => x.startsWith('D')).map(second),
