@@ -47,6 +47,21 @@ async function validateSHA(sha) {
   }
 }
 
+async function gitDiff(before, after) {
+  const buffer = [];
+  await exec('git', ['diff', '--name-status', before, after], {
+    silent: true,
+    listeners: {
+      stdout(data) {
+        buffer.push(data.toString());
+      },
+    },
+  });
+  const output = buffer.join('').trim();
+  core.debug(`Raw output:\n${output}`);
+  return output;
+}
+
 async function getChangesViaGit() {
   const [before, after] = getSHAs();
   core.debug(`Before SHA: ${before}`);
