@@ -77,7 +77,7 @@ async function getChangesViaGit() {
     process.exit();
   }
 
-  const diff = gitDiff(before, after);
+  const diff = await gitDiff(before, after);
 
   const lines = diff.split('\n').map((x) => x.split('\t'));
   return {
