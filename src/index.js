@@ -49,7 +49,7 @@ async function validateSHA(sha) {
   }
 }
 
-async function getChanges() {
+async function getChangesViaGit() {
   const [before, after] = getSHAs();
   core.debug(`Before SHA: ${before}`);
   core.debug(`After SHA: ${after}`);
@@ -83,6 +83,10 @@ async function getChanges() {
     modified: lines.filter(([x]) => x.startsWith('M')).map(second),
     all: lines.map(second),
   };
+}
+
+async function getChanges() {
+  return getChangesViaGit();
 }
 
 (async () => {
