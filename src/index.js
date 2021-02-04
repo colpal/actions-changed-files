@@ -16,10 +16,8 @@ function getSHAs() {
   const compareURL = github.context.payload.compare;
 
   if (!compareURL) {
-    return [
-      github.context.payload.pull_request.base.sha,
-      github.context.payload.pull_request.head.sha,
-    ];
+    core.setFailed('No compare URL found within the GitHub context object!');
+    return process.exit();
   }
 
   const multiRegex = /([^/]+)\.\.\.([^/]+)$/;
@@ -49,43 +47,77 @@ async function validateSHA(sha) {
   }
 }
 
+async function gitDiff(before, after) {
+  const buffer = [];
+  await exec('git', ['diff', '--name-status', before, after], {
+    silent: true,
+    listeners: {
+      stdout(data) {
+        buffer.push(data.toString());
+      },
+    },
+  });
+  const output = buffer.join('').trim();
+  core.debug(`Raw output:\n${output}`);
+  return output;
+}
+
+async function getChangesViaGit() {
+  const [before, after] = getSHAs();
+  core.debug(`Before SHA: ${before}`);
+  core.debug(`After SHA: ${after}`);
+
+  if (!await validateSHA(before)) {
+    core.setFailed(`The before SHA (${before}) was not found in the git log`);
+    process.exit();
+  }
+
+  if (!await validateSHA(after)) {
+    core.setFailed(`The after SHA (${after}) was not found in the git log`);
+    process.exit();
+  }
+
+  const diff = await gitDiff(before, after);
+
+  const lines = diff.split('\n').map((x) => x.split('\t'));
+  return {
+    added: lines.filter(([x]) => x.startsWith('A')).map(second),
+    deleted: lines.filter(([x]) => x.startsWith('D')).map(second),
+    modified: lines.filter(([x]) => x.startsWith('M')).map(second),
+    all: lines.map(second),
+  };
+}
+
+async function getChangesViaAPI() {
+  const token = core.getInput('token', { required: true });
+  const octokit = github.getOctokit(token);
+  const response = await octokit.pulls.listFiles({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    pull_number: github.context.payload.pull_request.number,
+    page: 1,
+    per_page: 100,
+  });
+  const files = response.data;
+  const validStatuses = new Set(['added', 'modified', 'removed']);
+  return {
+    added: files.filter(({ status }) => status === 'added').map((x) => x.filename),
+    modified: files.filter(({ status }) => status === 'modified').map((x) => x.filename),
+    deleted: files.filter(({ status }) => status === 'removed').map((x) => x.filename),
+    all: files.filter(({ status }) => validStatuses.has(status)).map((x) => x.filename),
+  };
+}
+
+async function getChanges() {
+  return github.context.eventName.startsWith('pull_request')
+    ? getChangesViaAPI()
+    : getChangesViaGit();
+}
+
 (async () => {
   try {
-    const [before, after] = getSHAs();
     core.debug(JSON.stringify(github.context.payload, null, 2));
-    core.debug(`Before SHA: ${before}`);
-    core.debug(`After SHA: ${after}`);
-
-    if (!await validateSHA(before)) {
-      core.setFailed(`The before SHA (${before}) was not found in the git log`);
-      process.exit();
-    }
-
-    if (!await validateSHA(after)) {
-      core.setFailed(`The after SHA (${after}) was not found in the git log`);
-      process.exit();
-    }
-
-    const buffer = [];
-    await exec('git', ['diff', '--name-status', before, after], {
-      silent: true,
-      listeners: {
-        stdout(data) {
-          buffer.push(data.toString());
-        },
-      },
-    });
-    const output = buffer.join('').trim();
-    core.debug(`Raw output:\n${output}`);
-
-    const lines = output.split('\n').map((x) => x.split('\t'));
-    const json = {
-      added: lines.filter(([x]) => x.startsWith('A')).map(second),
-      deleted: lines.filter(([x]) => x.startsWith('D')).map(second),
-      modified: lines.filter(([x]) => x.startsWith('M')).map(second),
-      all: lines.map(second),
-    };
-
+    const json = await getChanges();
     core.setOutput('json', json);
     setTextOutputs(json);
   } catch (error) {
