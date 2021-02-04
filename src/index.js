@@ -77,19 +77,9 @@ async function getChangesViaGit() {
     process.exit();
   }
 
-  const buffer = [];
-  await exec('git', ['diff', '--name-status', before, after], {
-    silent: true,
-    listeners: {
-      stdout(data) {
-        buffer.push(data.toString());
-      },
-    },
-  });
-  const output = buffer.join('').trim();
-  core.debug(`Raw output:\n${output}`);
+  const diff = gitDiff(before, after);
 
-  const lines = output.split('\n').map((x) => x.split('\t'));
+  const lines = diff.split('\n').map((x) => x.split('\t'));
   return {
     added: lines.filter(([x]) => x.startsWith('A')).map(second),
     deleted: lines.filter(([x]) => x.startsWith('D')).map(second),
