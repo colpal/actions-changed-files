@@ -16,10 +16,7 @@ function getSHAs() {
   const compareURL = github.context.payload.compare;
 
   if (!compareURL) {
-    return [
-      github.context.payload.pull_request.base.sha,
-      github.context.payload.pull_request.head.sha,
-    ];
+    core.setFailed('No compare URL found within the GitHub context object!');
   }
 
   const multiRegex = /([^/]+)\.\.\.([^/]+)$/;
