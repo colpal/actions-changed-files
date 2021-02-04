@@ -49,43 +49,46 @@ async function validateSHA(sha) {
   }
 }
 
+async function getChanges() {
+  const [before, after] = getSHAs();
+  core.debug(`Before SHA: ${before}`);
+  core.debug(`After SHA: ${after}`);
+
+  if (!await validateSHA(before)) {
+    core.setFailed(`The before SHA (${before}) was not found in the git log`);
+    process.exit();
+  }
+
+  if (!await validateSHA(after)) {
+    core.setFailed(`The after SHA (${after}) was not found in the git log`);
+    process.exit();
+  }
+
+  const buffer = [];
+  await exec('git', ['diff', '--name-status', before, after], {
+    silent: true,
+    listeners: {
+      stdout(data) {
+        buffer.push(data.toString());
+      },
+    },
+  });
+  const output = buffer.join('').trim();
+  core.debug(`Raw output:\n${output}`);
+
+  const lines = output.split('\n').map((x) => x.split('\t'));
+  return {
+    added: lines.filter(([x]) => x.startsWith('A')).map(second),
+    deleted: lines.filter(([x]) => x.startsWith('D')).map(second),
+    modified: lines.filter(([x]) => x.startsWith('M')).map(second),
+    all: lines.map(second),
+  };
+}
+
 (async () => {
   try {
-    const [before, after] = getSHAs();
     core.debug(JSON.stringify(github.context.payload, null, 2));
-    core.debug(`Before SHA: ${before}`);
-    core.debug(`After SHA: ${after}`);
-
-    if (!await validateSHA(before)) {
-      core.setFailed(`The before SHA (${before}) was not found in the git log`);
-      process.exit();
-    }
-
-    if (!await validateSHA(after)) {
-      core.setFailed(`The after SHA (${after}) was not found in the git log`);
-      process.exit();
-    }
-
-    const buffer = [];
-    await exec('git', ['diff', '--name-status', before, after], {
-      silent: true,
-      listeners: {
-        stdout(data) {
-          buffer.push(data.toString());
-        },
-      },
-    });
-    const output = buffer.join('').trim();
-    core.debug(`Raw output:\n${output}`);
-
-    const lines = output.split('\n').map((x) => x.split('\t'));
-    const json = {
-      added: lines.filter(([x]) => x.startsWith('A')).map(second),
-      deleted: lines.filter(([x]) => x.startsWith('D')).map(second),
-      modified: lines.filter(([x]) => x.startsWith('M')).map(second),
-      all: lines.map(second),
-    };
-
+    const json = await getChanges();
     core.setOutput('json', json);
     setTextOutputs(json);
   } catch (error) {
