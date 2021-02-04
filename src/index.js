@@ -107,7 +107,9 @@ async function getChangesViaAPI() {
 }
 
 async function getChanges() {
-  return getChangesViaGit();
+  return github.context.eventName.startsWith('pull_request')
+    ? getChangesViaAPI()
+    : getChangesViaGit();
 }
 
 (async () => {
