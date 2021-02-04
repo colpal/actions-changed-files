@@ -89,8 +89,7 @@ async function getChangesViaGit() {
 }
 
 async function getChangesViaAPI() {
-  const token = core.getInput('token', { required: true });
-  const octokit = github.getOctokit(token);
+  const octokit = github.getOctokit(github.token);
   const response = await octokit.pulls.listFiles({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
