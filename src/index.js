@@ -85,6 +85,26 @@ async function getChangesViaGit() {
   };
 }
 
+async function getChangesViaAPI() {
+  const token = core.getInput('token', { required: true });
+  const octokit = github.getOctokit(token);
+  const response = await octokit.pulls.listFiles({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    pull_number: github.context.payload.pull_request.number,
+    page: 1,
+    per_page: 100,
+  });
+  const files = response.data;
+  const validStatuses = new Set(['added', 'modified', 'removed']);
+  return {
+    added: files.filter(({ status }) => status === 'added').map((x) => x.filename),
+    modified: files.filter(({ status }) => status === 'modified').map((x) => x.filename),
+    deleted: files.filter(({ status }) => status === 'removed').map((x) => x.filename),
+    all: files.filter(({ status }) => validStatuses.has(status)).map((x) => x.filename),
+  };
+}
+
 async function getChanges() {
   return getChangesViaGit();
 }
