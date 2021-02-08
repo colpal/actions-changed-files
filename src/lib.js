@@ -99,8 +99,7 @@ async function getChangesViaAPI({ owner, repo, pull_number } = { // eslint-disab
   repo: github.context.repo.repoo,
   pull_number: github.context.payload.pull_request.number,
 }) {
-  const octokit = github.getOctokit(github.token);
-  const response = await octokit.pulls.listFiles({
+  const response = await github.getOctokit(github.token).pulls.listFiles({
     owner,
     repo,
     pull_number,
