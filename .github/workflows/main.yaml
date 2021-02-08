@@ -18,6 +18,8 @@ jobs:
       - run: npm ci
 
       - run: npm t
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run colpal/actions-changed-files
         id: changed
