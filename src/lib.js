@@ -67,8 +67,7 @@ async function gitDiff(before, after) {
 }
 exports.gitDiff = gitDiff;
 
-async function getChangesViaGit() {
-  const [before, after] = getSHAs();
+async function getChangesViaGit([before, after] = getSHAs()) {
   core.debug(`Before SHA: ${before}`);
   core.debug(`After SHA: ${after}`);
 
