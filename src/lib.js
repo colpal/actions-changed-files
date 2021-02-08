@@ -94,12 +94,16 @@ async function getChangesViaGit() {
 }
 exports.getChangesViaGit = getChangesViaGit;
 
-async function getChangesViaAPI() {
+async function getChangesViaAPI({ owner, repo, pull_number } = { // eslint-disable-line camelcase
+  owner: github.context.repo.owner,
+  repo: github.context.repo.repoo,
+  pull_number: github.context.payload.pull_request.number,
+}) {
   const octokit = github.getOctokit(github.token);
   const response = await octokit.pulls.listFiles({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    pull_number: github.context.payload.pull_request.number,
+    owner,
+    repo,
+    pull_number,
     page: 1,
     per_page: 100,
   });
