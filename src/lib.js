@@ -67,8 +67,7 @@ async function gitDiff(before, after) {
 }
 exports.gitDiff = gitDiff;
 
-async function getChangesViaGit() {
-  const [before, after] = getSHAs();
+async function getChangesViaGit([before, after] = getSHAs()) {
   core.debug(`Before SHA: ${before}`);
   core.debug(`After SHA: ${after}`);
 
@@ -94,12 +93,21 @@ async function getChangesViaGit() {
 }
 exports.getChangesViaGit = getChangesViaGit;
 
-async function getChangesViaAPI() {
-  const octokit = github.getOctokit(github.token);
-  const response = await octokit.pulls.listFiles({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    pull_number: github.context.payload.pull_request.number,
+async function getChangesViaAPI({
+  owner,
+  repo,
+  pull_number, // eslint-disable-line camelcase
+  token,
+} = {
+  owner: github.context.repo.owner,
+  repo: github.context.repo.repoo,
+  pull_number: github.context.payload.pull_request.number,
+  token: github.token,
+}) {
+  const response = await github.getOctokit(token).pulls.listFiles({
+    owner,
+    repo,
+    pull_number,
     page: 1,
     per_page: 100,
   });
