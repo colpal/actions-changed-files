@@ -1,5 +1,6 @@
 const {
   getChangesViaAPI,
+  getChangesViaGit,
 } = require('./lib');
 
 test('getChangesViaAPI', async () => {
@@ -15,5 +16,17 @@ test('getChangesViaAPI', async () => {
     pull_number: 5,
     token: process.env.GITHUB_TOKEN,
   });
+  return expect(actual).toStrictEqual(expected);
+});
+
+test('getChangesViaGit', async () => {
+  const commit = '66aa156a21ea5745bc04198541eb31f089aa3303';
+  const expected = {
+    deleted: [],
+    modified: ['.eslintrc.yml'],
+    added: ['src/lib.test.js'],
+    all: ['.eslintrc.yml', 'src/lib.test.js'],
+  };
+  const actual = await getChangesViaGit([`${commit}^^`, commit]);
   return expect(actual).toStrictEqual(expected);
 });
