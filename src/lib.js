@@ -106,7 +106,7 @@ async function getChangesViaAPI({
 }) {
   core.debug(`Owner: ${owner}`);
   core.debug(`Repository: ${repo}`);
-  core.debug(`Pull Number: ${pull_number}`);
+  core.debug(`Pull Number: ${pull_number}`); // eslint-disable-line camelcase
   const response = await github.getOctokit(token).pulls.listFiles({
     owner,
     repo,
