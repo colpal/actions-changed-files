@@ -5,7 +5,7 @@ const { getChanges, setTextOutputs } = require('./lib');
 
 (async () => {
   try {
-    core.debug(JSON.stringify(github.context.payload, null, 2));
+    core.debug(JSON.stringify(github.context, null, 2));
     const json = await getChanges();
     core.setOutput('json', json);
     setTextOutputs(json);
