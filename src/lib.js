@@ -102,7 +102,7 @@ async function getChangesViaAPI({
   owner: github.context.repo.owner,
   repo: github.context.repo.repoo,
   pull_number: github.context.payload.pull_request.number,
-  token: github.token,
+  token: core.getInput('token', { required: true }),
 }) {
   const response = await github.getOctokit(token).pulls.listFiles({
     owner,

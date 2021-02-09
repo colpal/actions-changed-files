@@ -1,6 +1,11 @@
 ---
 name: Changed Files
 description: Determine which files have changed since the last workflow run
+inputs:
+  token:
+    description: Token for GitHub access
+    required: false
+    default: ${{ github.token }}
 outputs:
   added:
     description: List of files that were added as raw text.
