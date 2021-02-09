@@ -100,7 +100,7 @@ async function getChangesViaAPI({
   token,
 } = {
   owner: github.context.repo.owner,
-  repo: github.context.repo.repoo,
+  repo: github.context.repo.repo,
   pull_number: github.context.payload.pull_request.number,
   token: core.getInput('token', { required: true }),
 }) {
