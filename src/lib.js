@@ -2,6 +2,14 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const { exec } = require('@actions/exec');
 
+function assert(boolean, message) {
+  if (!boolean) {
+    core.setFailed(message);
+    process.exit();
+  }
+}
+exports.assert = assert;
+
 function second([, b]) {
   return b;
 }
@@ -17,10 +25,7 @@ exports.setTextOutputs = setTextOutputs;
 function getSHAs() {
   const compareURL = github.context.payload.compare;
 
-  if (!compareURL) {
-    core.setFailed('No compare URL found within the GitHub context object!');
-    return process.exit();
-  }
+  assert(compareURL, 'No compare URL found within the GitHub context object!');
 
   const multiRegex = /([^/]+)\.\.\.([^/]+)$/;
   const multiMatches = compareURL.match(multiRegex);
@@ -71,15 +76,8 @@ async function getChangesViaGit([before, after] = getSHAs()) {
   core.debug(`Before SHA: ${before}`);
   core.debug(`After SHA: ${after}`);
 
-  if (!await validateSHA(before)) {
-    core.setFailed(`The before SHA (${before}) was not found in the git log`);
-    process.exit();
-  }
-
-  if (!await validateSHA(after)) {
-    core.setFailed(`The after SHA (${after}) was not found in the git log`);
-    process.exit();
-  }
+  assert(await validateSHA(before), `The before SHA (${before}) was not found in the git log`);
+  assert(await validateSHA(after), `The after SHA (${after}) was not found in the git log`);
 
   const diff = await gitDiff(before, after);
 
