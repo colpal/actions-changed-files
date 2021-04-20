@@ -1,4 +1,5 @@
 {
+  "version": "2.2.2",
   "scripts": {
     "test": "jest",
     "build": "webpack"
