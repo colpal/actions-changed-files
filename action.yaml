@@ -21,5 +21,5 @@ outputs:
   modified:
     description: List of files that had modifications as raw text.
 runs:
-  using: node12
+  using: node16
   main: dist/main.js
