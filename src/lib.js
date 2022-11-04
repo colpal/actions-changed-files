@@ -108,7 +108,7 @@ async function getChangesViaAPI({
   const response = await github.getOctokit(token).pulls.listFiles({
     owner,
     repo,
-    pull_number,
+    pull_number, // eslint-disable-line camelcase
     page: 1,
     per_page: 100,
   });
