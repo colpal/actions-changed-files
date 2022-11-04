@@ -8675,7 +8675,7 @@ ${output}`);
       core2.debug(`Owner: ${owner}`);
       core2.debug(`Repository: ${repo}`);
       core2.debug(`Pull Number: ${pull_number}`);
-      const response = await github2.getOctokit(token).pulls.listFiles({
+      const response = await github2.getOctokit(token).rest.pulls.listFiles({
         owner,
         repo,
         pull_number,
