@@ -2,12 +2,8 @@
   "version": "2.2.4",
   "scripts": {
     "build": "esbuild src/index.js --bundle --platform=node --outfile=dist/main.js",
+    "prepare": "husky install",
     "test": "jest"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run build && git add dist/main.js"
-    }
   },
   "devDependencies": {
     "esbuild": "^0.15.13",
