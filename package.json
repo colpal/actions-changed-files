@@ -1,5 +1,5 @@
 {
-  "version": "2.2.5",
+  "version": "2.2.6",
   "scripts": {
     "build": "esbuild src/index.js --bundle --platform=node --target=node16 --outfile=dist/main.js",
     "prepare": "husky install",
