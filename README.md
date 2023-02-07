@@ -42,3 +42,8 @@ steps:
     #     "deleted": ["src/index.js"]
     #   }
 ```
+
+## Required Permissions
+
+- contents:read
+- pull-requests:read
