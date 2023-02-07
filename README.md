@@ -7,6 +7,10 @@ Usage
 -----
 
 ```yaml
+# Minimal set of permissions
+# permissions:
+#   pull-requests: read
+
 steps:
   - uses: actions/checkout@v2
     with:
