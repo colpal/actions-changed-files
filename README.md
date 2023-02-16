@@ -33,6 +33,10 @@ steps:
     # Access the deleted files as a plain text list. For example:
     #   src/index.js
 
+  - run: echo '${{ steps.changed.outputs.renamed }}'
+    # Access the renamed files as a plain text list. For example:
+    #   dist/main.js
+
   - run: echo '${{ steps.changed.outputs.json }}'
     # Access the changed files as a JSON string with added, modified, deleted, and all keys
     #   {
