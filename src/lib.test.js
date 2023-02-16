@@ -23,6 +23,7 @@ test('getChangesViaGit', async () => {
   const commit = '66aa156a21ea5745bc04198541eb31f089aa3303';
   const expected = {
     deleted: [],
+    renamed: [],
     modified: ['.eslintrc.yml'],
     added: ['src/lib.test.js'],
     all: ['.eslintrc.yml', 'src/lib.test.js'],
