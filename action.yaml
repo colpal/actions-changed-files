@@ -11,13 +11,16 @@ outputs:
     description: List of files that were added as raw text.
   all:
     description: List of files that had any changes as raw text.
+  renamed:
+    description: List of files that were renamed as raw text.
   deleted:
     description: List of files that were deleted as raw text.
   json:
     description: |
-      JSON object that has "added", "deleted", and "modified" keys, each of which is a list of
-      files that had changes of the type named by the key. Also contains an "all" key which is a
-      list of all files that had any changes.
+      JSON object that has "added", "deleted", "renamed", and "modified" keys,
+      each of which is a list of files that had changes of the type named by
+      the key. Also contains an "all" key which is a list of all files that had
+      any changes.
   modified:
     description: List of files that had modifications as raw text.
 runs:

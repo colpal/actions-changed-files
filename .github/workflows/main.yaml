@@ -36,5 +36,8 @@ jobs:
       - name: Output added as text
         run: echo '${{ steps.changed.outputs.added }}'
 
+      - name: Output renamed as text
+        run: echo '${{ steps.changed.outputs.renamed }}'
+
       - name: Output as JSON
         run: echo '${{ steps.changed.outputs.json }}'

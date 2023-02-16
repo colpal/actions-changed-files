@@ -6,6 +6,7 @@ const {
 test('getChangesViaAPI', async () => {
   const expected = {
     deleted: [],
+    renamed: [],
     modified: ['.github/workflows/main.yaml'],
     added: ['file.txt'],
     all: ['.github/workflows/main.yaml', 'file.txt'],
@@ -23,6 +24,7 @@ test('getChangesViaGit', async () => {
   const commit = '66aa156a21ea5745bc04198541eb31f089aa3303';
   const expected = {
     deleted: [],
+    renamed: [],
     modified: ['.eslintrc.yml'],
     added: ['src/lib.test.js'],
     all: ['.eslintrc.yml', 'src/lib.test.js'],

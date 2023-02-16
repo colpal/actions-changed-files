@@ -8654,6 +8654,7 @@ ${output}`);
       const diff = await gitDiff(before, after);
       const lines = diff.split("\n").map((x) => x.split("	"));
       return {
+        renamed: lines.filter(([x]) => x.startsWith("R")).map(second),
         added: lines.filter(([x]) => x.startsWith("A")).map(second),
         deleted: lines.filter(([x]) => x.startsWith("D")).map(second),
         modified: lines.filter(([x]) => x.startsWith("M")).map(second),
@@ -8683,8 +8684,9 @@ ${output}`);
         per_page: 100
       });
       const files = response.data;
-      const validStatuses = /* @__PURE__ */ new Set(["added", "modified", "removed"]);
+      const validStatuses = /* @__PURE__ */ new Set(["added", "modified", "removed", "renamed"]);
       return {
+        renamed: files.filter(({ status }) => status === "renamed").map((x) => x.filename),
         added: files.filter(({ status }) => status === "added").map((x) => x.filename),
         modified: files.filter(({ status }) => status === "modified").map((x) => x.filename),
         deleted: files.filter(({ status }) => status === "removed").map((x) => x.filename),
