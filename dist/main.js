@@ -8654,6 +8654,7 @@ ${output}`);
       const diff = await gitDiff(before, after);
       const lines = diff.split("\n").map((x) => x.split("	"));
       return {
+        renamed: lines.filter(([x]) => x.startsWith("R")).map(second),
         added: lines.filter(([x]) => x.startsWith("A")).map(second),
         deleted: lines.filter(([x]) => x.startsWith("D")).map(second),
         modified: lines.filter(([x]) => x.startsWith("M")).map(second),
