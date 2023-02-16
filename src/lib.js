@@ -114,7 +114,7 @@ async function getChangesViaAPI({
     per_page: 100,
   });
   const files = response.data;
-  const validStatuses = new Set(['added', 'modified', 'removed']);
+  const validStatuses = new Set(['added', 'modified', 'removed', 'renamed']);
   return {
     renamed: files.filter(({ status }) => status === 'renamed').map((x) => x.filename),
     added: files.filter(({ status }) => status === 'added').map((x) => x.filename),
