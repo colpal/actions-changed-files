@@ -38,9 +38,10 @@ steps:
     #   dist/main.js
 
   - run: echo '${{ steps.changed.outputs.json }}'
-    # Access the changed files as a JSON string with added, modified, deleted, and all keys
+    # Access the changed files as a JSON string with added, modified, deleted, renamed, and all keys
     #   {
-    #     "all": ["src/index.js", "README.md"],
+    #     "all": ["src/index.js", "README.md", "dist/main.js"],
+    #     "renamed": ["dist/main.js"],
     #     "modified": [],
     #     "added": ["README.md"],
     #     "deleted": ["src/index.js"]
