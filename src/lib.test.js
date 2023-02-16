@@ -6,6 +6,7 @@ const {
 test('getChangesViaAPI', async () => {
   const expected = {
     deleted: [],
+    renamed: [],
     modified: ['.github/workflows/main.yaml'],
     added: ['file.txt'],
     all: ['.github/workflows/main.yaml', 'file.txt'],
