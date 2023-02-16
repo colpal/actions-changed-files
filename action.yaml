@@ -11,6 +11,8 @@ outputs:
     description: List of files that were added as raw text.
   all:
     description: List of files that had any changes as raw text.
+  renamed:
+    description: List of files that were renamed as raw text.
   deleted:
     description: List of files that were deleted as raw text.
   json:
