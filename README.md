@@ -1,3 +1,7 @@
+# DEPRECATED
+
+## This action is deprecated. For a suitable replacement, try [tj-actions/changed-files](https://github.com/tj-actions/changed-files)
+
 Changed Files
 =============
 
