@@ -8705,6 +8705,7 @@ var core = require_core();
 var { getChanges, setTextOutputs } = require_lib4();
 (async () => {
   try {
+    core.warning('DEPRECATED: "colpal/actions-changed-files" is deprecated. For a suitable replacement, try "tj-actions/changed-files"');
     core.debug(JSON.stringify(github.context, null, 2));
     const json = await getChanges();
     core.setOutput("json", json);
